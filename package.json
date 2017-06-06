@@ -26,7 +26,8 @@
     "docs": "typedoc --options typedoc.json src/app/app.component.ts",
     "start": "npm run server",
     "start:hmr": "npm run server -- --hot",
-    "postinstall": "npm run webdriver-update"
+    "postinstall": "npm run webdriver-update",
+    "travis-test": "./node_modules/.bin/karma start --browsers Firefox --single-run"
   },
   "dependencies": {
     "@angular/common": "2.4.2",
