@@ -140,15 +140,6 @@ module.exports = function makeWebpackConfig() {
     });
   }
 
-  if (!isTest || !isTestWatch) {
-    // tslint support
-    config.module.rules.push({
-      test: /\.ts$/,
-      enforce: 'pre',
-      loader: 'tslint-loader'
-    });
-  }
-
   /**
    * Plugins
    * Reference: http://webpack.github.io/docs/configuration.html#plugins
