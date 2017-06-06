@@ -4,10 +4,6 @@ import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-import { SampleComponent } from './components/sample.component';
-import { SampleDirective } from './directives/sample.directive';
-import { SamplePipe } from './pipes/sample.pipe';
-import { SampleService } from './services/sample.service';
 
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
 
