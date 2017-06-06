@@ -51,7 +51,6 @@
     "angular2-template-loader": "^0.6.0",
     "autoprefixer": "^6.3.2",
     "awesome-typescript-loader": "^3.0.0-beta.17",
-    "codelyzer": "1.0.0-beta.3",
     "copy-webpack-plugin": "^4.0.0",
     "css-loader": "^0.26.1",
     "extract-text-webpack-plugin": "^2.0.0-beta.4",
