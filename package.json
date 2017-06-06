@@ -1,9 +1,8 @@
 {
-  "name": "ngx-your-library",
+  "name": "ngx-frenetiq-dnd",
   "version": "0.0.0",
-  "description": "Your library description.",
   "repository": {
-    "url": "https://github.com/preboot/angular-library-seed"
+    "url": "https://github.com/snorrwe/Frenetiq-Dnd"
   },
   "license": "MIT",
   "scripts": {
@@ -12,7 +11,7 @@
     "clean-start": "npm run clean-install && npm start",
     "watch": "webpack --watch --progress --profile",
     "build": "tsc --p tsconfig-build.json",
-    "server": "webpack-dev-server --inline --progress --port 8080",
+    "start": "webpack-dev-server --inline --progress --port 8080",
     "webdriver-update": "webdriver-manager update",
     "webdriver-start": "webdriver-manager start",
     "lint": "tslint --force \"src/**/*.ts\"",
@@ -24,7 +23,6 @@
     "test-watch": "karma start --no-single-run --auto-watch",
     "ci": "npm run e2e && npm run test",
     "docs": "typedoc --options typedoc.json src/app/app.component.ts",
-    "start": "npm run server",
     "start:hmr": "npm run server -- --hot",
     "postinstall": "npm run webdriver-update",
     "travis-test": "./node_modules/.bin/karma start --browsers Firefox --single-run"
