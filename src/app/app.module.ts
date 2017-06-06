@@ -4,27 +4,22 @@ import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-
-import { DraggableDirective } from './core/directives/draggable.directive';
-import { ContainerDirective } from './core/directives/container.directive';
-import { DragService } from './core/services/drag.service';
-
 import { HelloComponent } from './example/hello/hello.component';
+
+import { FrenetiqDnd } from '../core/ngx-frenetiq-dnd';
 
 @NgModule({
     imports: [
         BrowserModule,
         HttpModule,
-        FormsModule
+        FormsModule,
+        FrenetiqDnd
     ],
     declarations: [
         AppComponent
-        , DraggableDirective
-        , ContainerDirective
         , HelloComponent
     ],
     providers: [
-        DragService
     ],
     bootstrap: [AppComponent]
 })

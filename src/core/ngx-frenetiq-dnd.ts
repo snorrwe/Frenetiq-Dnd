@@ -1,8 +1,8 @@
 import { NgModule, ModuleWithProviders } from "@angular/core";
 
-import { ContainerDirective } from './app/core/directives/container.directive';
-import { DraggableDirective } from './app/core/directives/draggable.directive';
-import { DragService } from './app/core/services/drag.service';
+import { ContainerDirective } from './directives/container.directive';
+import { DraggableDirective } from './directives/draggable.directive';
+import { DragService } from './services/drag.service';
 
 @NgModule({
   declarations: [

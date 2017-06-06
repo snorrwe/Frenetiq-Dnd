@@ -42,9 +42,6 @@ Thumbs.db
 /typings/
 /tsd_typings/
 
-# Doc #
-/doc/
-
 # IDE #
 .idea/
 *.swp

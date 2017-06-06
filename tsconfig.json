@@ -13,7 +13,10 @@
     "target": "es5",
     "typeRoots": [
       "node_modules/@types"
-      /*, "src/typings.d.ts"*/
     ]
-  }
+  }, 
+  "exclude": [
+    "node_modules"
+    , "dist"
+  ]
 }

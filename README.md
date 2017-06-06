@@ -10,8 +10,6 @@ What you need to run this seed:
 
 It will start a local demo server using `webpack-dev-server` which will watch, build (in-memory), and reload for you. The port will be displayed to you as `http://localhost:8080`.
 
-## Developing
-
 ### Build files
 
 * single run: `npm run build`
@@ -36,11 +34,7 @@ It will start a local demo server using `webpack-dev-server` which will watch, b
   * you can learn more about [Protractor Interactive Mode here](https://github.com/angular/protractor/blob/master/docs/debugging.md#testing-out-protractor-interactively)
 
 ## Documentation
-
-You can generate api docs (using [TypeDoc](http://typedoc.io/)) for your code with the following:
-```bash
-npm run docs
-```
+See _/docs_
 
 ## Credits
 
