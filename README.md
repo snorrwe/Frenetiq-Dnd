@@ -2,7 +2,7 @@
 A simple, but working drag'n'drop framework for Angular2
 
 ## Installation
-Run _npm install --save ngx-frenetiq-dnd
+Run _npm install --save ngx-frenetiq-dnd_
 
 ## Demo
 There's a very basic demo available at [https://snorrwe.github.io/frenetiq-dnd](https://snorrwe.github.io/frenetiq-dnd)
