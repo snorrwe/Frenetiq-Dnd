@@ -1,4 +1,4 @@
-import { ViewContainerRef, ComponentFactoryResolver, Directive, Input, Output, EventEmitter, ElementRef, HostListener, OnChanges, OnInit, OnDestroy } from '@angular/core';
+import { Directive, Input, Output, EventEmitter, ElementRef, HostListener, OnChanges, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
 
 import { DragService } from '../services/drag.service';
@@ -6,15 +6,22 @@ import { Draggable } from './draggable.base';
 import { DraggableDirective } from './draggable.directive';
 
 import { ContainerOptions, DefaultOptions } from '../model/container.options';
+import { DraggableOptions } from '../model/draggable.options';
+import { DragContainerPair } from '../model/draggable-container.pair';
 
-class DraggableChild extends Draggable {
+export class DraggableClone extends Draggable {
+
+    private _nativeElement: HTMLElement;
+    get nativeElement() { return this._nativeElement; }
 
     constructor(
-        service: DragService
+        draggable: Draggable
+        , service: DragService
         , readonly parent: ContainerDirective
-        , readonly nativeElement: HTMLElement
     ) {
         super(service);
+        this._options = draggable.options;
+        this._nativeElement = draggable.nativeElement.cloneNode(true) as HTMLElement;
     }
 }
 
@@ -25,7 +32,7 @@ class DraggableChild extends Draggable {
 export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
 
     @Input("options") protected options: ContainerOptions;
-    @Output("onDrop") protected onDropEmitter: EventEmitter<{ draggable: Draggable, container: ContainerDirective }>;
+    @Output("onDrop") protected onDropEmitter: EventEmitter<DragContainerPair>;
 
     protected isTarget: boolean;
     protected subscriptions: Subscription[];
@@ -38,12 +45,10 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
     constructor(
         readonly elementRef: ElementRef
         , protected dragService: DragService
-        , protected viewContainerRef: ViewContainerRef
-        , protected componentFactoryResolver: ComponentFactoryResolver
     ) {
         this.children = [];
         if (!this.options) this.options = DefaultOptions;
-        this.onDropEmitter = new EventEmitter<{ draggable: Draggable, container: ContainerDirective }>();
+        this.onDropEmitter = new EventEmitter<DragContainerPair>();
 
         let onDragStartSub = this.subscribeToDragStart();
         let onDragEndSub = this.subscribeToDragEnd();
@@ -61,7 +66,7 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
             .onDragEnd()
             .subscribe((draggable) => {
                 if (draggable.parent === this) {
-                    this.onChildDrop(draggable);
+                    this.onChildDrop(draggable as DraggableClone);
                 } else if (this.isTarget && !this.options.isDisabled) {
                     this.onDrop(draggable);
                 }
@@ -101,24 +106,27 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
             return;
         }
         if (!this.options.isCloningDisabled) {
-            let next = draggable.nativeElement.cloneNode(true);
-            this.initClone(next, draggable.model);
+            this.initClone(draggable);
         }
         this.dragleave();
         this.dragService.drop(draggable, this);
         this.onDropEmitter.emit({ draggable: draggable, container: this });
     }
 
-    private initClone(node: Node, model: any) {
-        this.children.push({ node: node, model: model });
-        let draggable = new DraggableChild(this.dragService, this, node as HTMLElement);
-        draggable.model = node;
-        (node as HTMLElement).ondragstart = (event) => draggable.startDrag(event);
-        (node as HTMLElement).ondragend = () => draggable.endDrag();
+    private initClone(draggable: Draggable) {
+        let clone = new DraggableClone(draggable, this.dragService, this);
+        let node = clone.nativeElement;
+        clone.model = node;
+        node.draggable = this.options.areChildrenDraggable;
+        if (node.draggable) {
+            node.ondragstart = (event) => clone.startDrag(event);
+            node.ondragend = () => clone.endDrag();
+        }
+        this.children.push({ node: node, model: draggable.model });
         this.nativeElement.appendChild(node);
     }
 
-    protected onChildDrop(draggable: DraggableChild) {
+    protected onChildDrop(draggable: DraggableClone) {
         if (!this.isTarget) {
             let childIndex: number;
             let child = this.children.find((item, index) => {
@@ -134,9 +142,16 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
     }
 
     protected onDragOver(event: DragEvent) {
-        let keys: string[];
+        let keys: { key: string, value: boolean }[];
         if (this.options && this.options.enabledContainers) {
-            keys = Object.keys(this.options.enabledContainers);
+            let allKeys = Object.keys(this.options.enabledContainers);
+            keys = allKeys
+                .map((key) => {
+                    return {
+                        key: key
+                        , value: this.options.enabledContainers[key]
+                    }
+                });
         }
         if (this.dragService.isContainerValid(keys)) {
             event.preventDefault();

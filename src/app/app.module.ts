@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { HelloComponent } from './example/hello/hello.component';
+import { ContainerComponent } from './example/container/container.component';
 
 import { FrenetiqDnd } from '../core/ngx-frenetiq-dnd';
 
@@ -18,9 +19,9 @@ import { FrenetiqDnd } from '../core/ngx-frenetiq-dnd';
     declarations: [
         AppComponent
         , HelloComponent
+        , ContainerComponent
     ],
-    providers: [
-    ],
+    providers: [],
     bootstrap: [AppComponent]
 })
 export class AppModule {

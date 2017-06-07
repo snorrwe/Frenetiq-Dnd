@@ -1,4 +1,35 @@
-<hello frenetiq-draggable drag-model="Hiii"></hello>
-<div frenetiq-container style="width: 200px; min-height: 200px; background-color: red"></div>
-<div frenetiq-container style="width: 200px; min-height: 200px; background-color: blue"></div>
+<hello frenetiq-draggable 
+	   [drag-model]="'Hello'"
+	   [options]="dragoptionsI">
+</hello>
+<div style="float: left">
+	<app-container [options]="optionsI" 
+				   [title]="'I'"
+				   [color]="'red'">
+	</app-container>
+</div>
+<div style="float: left">
+	<app-container [options]="optionsII" 
+				   [title]="'II'"
+				   [color]="'blue'"> 
+	</app-container>
+</div>
+<div style="float: left">
+	<app-container [options]="optionsIII" 
+				   [title]="'III'"
+				   [color]="'green'"> 
+	</app-container>
+</div>
+<div style="float: left;">
+	<app-container [options]="optionsIV" 
+				   [title]="'IV'"
+				   [color]="'grey'"> 
+	</app-container>
+</div>
+<div style="float: left;">
+	<app-container [options]="optionsV" 
+				   [title]="'V'"
+				   [color]="'grey'"> 
+	</app-container>
+</div>
  

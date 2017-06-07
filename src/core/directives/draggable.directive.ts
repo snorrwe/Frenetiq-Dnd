@@ -10,7 +10,7 @@ import { Draggable } from './draggable.base';
 })
 export class DraggableDirective extends Draggable implements OnInit, OnChanges {
 
-	@Input("options") protected options: DraggableOptions;
+	@Input("options") protected _options: DraggableOptions;
     @Input("drag-model") readonly model: any;
     @Output("onDragStart") protected onDragStartEmitter: EventEmitter<Draggable>;
     @Output("onDragEnd") protected onDragEndEmitter: EventEmitter<Draggable>;
@@ -28,18 +28,18 @@ export class DraggableDirective extends Draggable implements OnInit, OnChanges {
         super(dragService);
 	    this.onDragStartEmitter = new EventEmitter<Draggable>();
         this.onDragEndEmitter = new EventEmitter<Draggable>();
-		if (!this.options) this.options = DefaultOptions;
+		if (!this._options) this._options = DefaultOptions;
 	}
 
 	ngOnInit() {
-		if (!this.options) this.options = DefaultOptions;
-		this.elementRef.nativeElement.draggable = !this.options.isDisabled;
+		if (!this._options) this._options = DefaultOptions;
+		this.elementRef.nativeElement.draggable = !this._options.isDisabled;
 		(this.elementRef.nativeElement as HTMLElement).style.display = "block";
 	}
 
 	ngOnChanges() {
-		if (!this.options) this.options = DefaultOptions;
-		this.elementRef.nativeElement.draggable = !this.options.isDisabled;
+		if (!this._options) this._options = DefaultOptions;
+		this.elementRef.nativeElement.draggable = !this._options.isDisabled;
 	}
 
 	@HostListener("dragstart", ["$event"])

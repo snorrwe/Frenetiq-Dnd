@@ -56,3 +56,5 @@ Thumbs.db
 !karma*.js
 !protractor.conf.js
 !webpack.config.js
+*.sublime-workspace
+*.sublime-project

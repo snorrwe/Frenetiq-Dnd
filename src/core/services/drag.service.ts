@@ -3,6 +3,7 @@ import { Subject, Observable } from 'rxjs/Rx';
 
 import { Draggable } from '../directives/draggable.base';
 import { ContainerDirective } from '../directives/container.directive';
+import { DragContainerPair } from '../model/draggable-container.pair';
 
 @Injectable()
 export class DragService {
@@ -13,30 +14,30 @@ export class DragService {
 
     private onDragStartSubj: Subject<Draggable>;
     private onDragEndSubj: Subject<Draggable>;
-    private onDropSubj: Subject<{ draggable: Draggable, container: ContainerDirective }>;
+    private onDropSubj: Subject<DragContainerPair>;
     private onMissSubj: Subject<Draggable>;
 
     constructor() {
         this.onDragStartSubj = new Subject<Draggable>();
         this.onDragEndSubj = new Subject<Draggable>();
         this.onMissSubj = new Subject<Draggable>();
-        this.onDropSubj = new Subject<{ draggable: Draggable, container: ContainerDirective }>();
+        this.onDropSubj = new Subject<DragContainerPair>();
     }
 
-    drop(draggable: Draggable, container: ContainerDirective) {
-        this.onDropSubj.next({ draggable: draggable, container: container });
-    }
-
-    isContainerValid(containers: string[]) {
+    isContainerValid(containers: { key: string, value: boolean }[]) {
         if (!containers || !containers.length) {
             return true;
         }
         for (let container of containers) {
-            if (this.validContainers[container]) {
+            if (container.value && this.validContainers[container.key]) {
                 return true;
             }
         }
         return false;
+    }
+
+    drop(draggable: Draggable, container: ContainerDirective) {
+        this.onDropSubj.next({ draggable: draggable, container: container });
     }
 
     enterDrag(container: ContainerDirective) {
@@ -62,7 +63,7 @@ export class DragService {
         delete this.currentTarget;
     }
 
-    onDrop(): Observable<{ draggable: Draggable, container: ContainerDirective }> {
+    onDrop(): Observable<DragContainerPair> {
         return this.onDropSubj.asObservable();
     }
 
