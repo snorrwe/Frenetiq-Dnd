@@ -11,7 +11,10 @@ import { Draggable } from './draggable.base';
 export class DraggableDirective extends Draggable implements OnInit, OnChanges {
 
 	@Input("options") protected options: DraggableOptions;
-	@Input("drag-model") readonly model: any;
+    @Input("drag-model") readonly model: any;
+    @Output("onDragStart") protected onDragStartEmitter: EventEmitter<Draggable>;
+    @Output("onDragEnd") protected onDragEndEmitter: EventEmitter<Draggable>;
+    @Input("parent") readonly parent: any;
 
 	get nativeElement(): HTMLElement {
 		return this.elementRef.nativeElement;
@@ -22,7 +25,9 @@ export class DraggableDirective extends Draggable implements OnInit, OnChanges {
 		, readonly viewContainer: ViewContainerRef
 		, dragService: DragService
 	) {
-		super(dragService);
+        super(dragService);
+	    this.onDragStartEmitter = new EventEmitter<Draggable>();
+        this.onDragEndEmitter = new EventEmitter<Draggable>();
 		if (!this.options) this.options = DefaultOptions;
 	}
 
@@ -39,13 +44,13 @@ export class DraggableDirective extends Draggable implements OnInit, OnChanges {
 
 	@HostListener("dragstart")
 	startDrag() {
-		this.nativeElement.classList.add("fren-dragging");
-		super.startDrag();
+        super.startDrag();
+	    this.onDragStartEmitter.emit(this);
 	}
 
 	@HostListener("dragend")
 	endDrag() {
-		this.nativeElement.classList.remove("fren-dragging");
-		super.endDrag();
+        super.endDrag();
+	    this.onDragEndEmitter.emit(this);
 	}
 } 

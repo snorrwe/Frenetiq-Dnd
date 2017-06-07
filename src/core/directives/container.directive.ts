@@ -9,132 +9,146 @@ import { ContainerOptions, DefaultOptions } from '../model/container.options';
 
 class DraggableChild extends Draggable {
 
-	constructor(
-		service: DragService
-		, readonly parent: ContainerDirective
-		, readonly nativeElement: HTMLElement
-	) {
-		super(service);
-	}
+    constructor(
+        service: DragService
+        , readonly parent: ContainerDirective
+        , readonly nativeElement: HTMLElement
+    ) {
+        super(service);
+    }
 }
 
 @Directive({
-	selector: '[frenetiq-container]'
-	, exportAs: 'frenetiq-container'
+    selector: '[frenetiq-container]'
+    , exportAs: 'frenetiq-container'
 })
 export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
 
-	@Input("options") protected options: ContainerOptions;
+    @Input("options") protected options: ContainerOptions;
+    @Output("onDrop") protected onDropEmitter: EventEmitter<{ draggable: Draggable, container: ContainerDirective }>;
 
-	protected isTarget: boolean;
-	protected subscriptions: Subscription[];
-	protected children: { model?: any, node: Node }[];
+    protected isTarget: boolean;
+    protected subscriptions: Subscription[];
+    protected children: { model?: any, node: Node }[];
 
-	protected get nativeElement(): HTMLElement {
-		return this.elementRef.nativeElement;
-	}
+    protected get nativeElement(): HTMLElement {
+        return this.elementRef.nativeElement;
+    }
 
-	constructor(
-		readonly elementRef: ElementRef
-		, protected dragService: DragService
-		, protected viewContainerRef: ViewContainerRef
-		, protected componentFactoryResolver: ComponentFactoryResolver
-	) {
-		this.children = [];
-		if (!this.options) this.options = DefaultOptions;
+    constructor(
+        readonly elementRef: ElementRef
+        , protected dragService: DragService
+        , protected viewContainerRef: ViewContainerRef
+        , protected componentFactoryResolver: ComponentFactoryResolver
+    ) {
+        this.children = [];
+        if (!this.options) this.options = DefaultOptions;
+        this.onDropEmitter = new EventEmitter<{ draggable: Draggable, container: ContainerDirective }>();
 
-		let onDragStartSub = this.dragService
-			.onDragStart()
-			.subscribe((draggable) => { });
-		let onDragEndSub = this.dragService
-			.onDragEnd()
-			.subscribe((draggable) => {
-				if (draggable instanceof DraggableChild && draggable.parent === this) {
-					this.onChildDrop(draggable);
-				} else if (this.isTarget && !this.options.isDisabled) {
-					this.onDrop(draggable);
-				}
-			});
-		this.subscriptions = [onDragStartSub, onDragEndSub];
-	}
+        let onDragStartSub = this.subscribeToDragStart();
+        let onDragEndSub = this.subscribeToDragEnd();
+        this.subscriptions = [onDragStartSub, onDragEndSub];
+    }
 
-	ngOnInit() {
-		if (!this.options) this.options = DefaultOptions;
-	}
+    private subscribeToDragStart() {
+        return this.dragService
+            .onDragStart()
+            .subscribe((draggable) => { });
+    }
 
-	ngOnChanges() {
-		if (!this.options) this.options = DefaultOptions;
-	}
+    private subscribeToDragEnd() {
+        return  this.dragService
+            .onDragEnd()
+            .subscribe((draggable) => {
+                if (draggable instanceof DraggableChild && draggable.parent === this) {
+                    this.onChildDrop(draggable);
+                } else if (this.isTarget && !this.options.isDisabled) {
+                    this.onDrop(draggable);
+                }
+            });
+    }
 
-	ngOnDestroy() {
-		this.subscriptions.forEach((sub) => {
-			sub.unsubscribe();
-		});
-	}
+    ngOnInit() {
+        if (!this.options) this.options = DefaultOptions;
+    }
 
-	@HostListener('dragenter')
-	protected dragenter() {
-		this.onDragEnter();
-	}
+    ngOnChanges() {
+        if (!this.options) this.options = DefaultOptions;
+    }
 
-	@HostListener('dragleave')
-	protected dragleave() {
-		requestAnimationFrame(() => {
-			this.onDragLeave();
-		});
-	}
+    ngOnDestroy() {
+        this.subscriptions
+            .forEach((sub) => {
+                sub.unsubscribe();
+            });
+    }
 
-	protected onDrop(draggable: Draggable) {
-		if (!draggable) {
-			console.warn("onDrop called without draggable!");
-			return;
-		}
-		let next = draggable.nativeElement.cloneNode(true);
-		this.initClone(next, draggable.model);
-		this.dragService.drop(draggable, this);
-	}
+    @HostListener('dragenter')
+    protected dragenter() {
+        this.onDragEnter();
+    }
 
-	private initClone(next: Node, model: any) {
-		this.children.push({ node: next, model: model });
-		let nextDraggable = new DraggableChild(this.dragService, this, next as HTMLElement);
-		nextDraggable.model = next;
-		(next as HTMLElement).ondragstart = () => nextDraggable.startDrag();
-		(next as HTMLElement).ondragend = () => nextDraggable.endDrag();
-		(next as HTMLElement).ondragenter = () => { this.dragenter(); }
-		(next as HTMLElement).ondragleave = () => { this.dragleave(); }
-		this.nativeElement.appendChild(next);
-	}
+    @HostListener('dragleave')
+    protected dragleave() {
+        requestAnimationFrame(() => {
+            this.onDragLeave();
+        });
+    }
 
-	protected onChildDrop(draggable: DraggableChild) {
-		if (!this.isTarget) {
-			let childIndex: number;
-			let child = this.children.find((item, index) => {
-				childIndex = index;
-				let result = item.node === draggable.nativeElement;
-				return result;
-			});
-			if (child) {
-				this.children.splice(childIndex, 1);
-				this.nativeElement.removeChild(child.node);
-			}
-		}
-	}
+    protected onDrop(draggable: Draggable) {
+        if (!draggable) {
+            console.warn("onDrop called without draggable!");
+            return;
+        }
+        if (!this.options.isCloningDisabled) {
+            let next = draggable.nativeElement.cloneNode(true);
+            this.initClone(next, draggable.model);
+        }
+        this.dragService.drop(draggable, this);
+        this.onDropEmitter.emit({ draggable: draggable, container: this });
+    }
 
-	protected onDragEnter() {
-		this.isTarget = true;
-		this.nativeElement.classList.add("fren-hover");
-	}
+    private initClone(next: Node, model: any) {
+        this.children.push({ node: next, model: model });
+        let nextDraggable = new DraggableChild(this.dragService, this, next as HTMLElement);
+        nextDraggable.model = next;
+        (next as HTMLElement).ondragstart = () => nextDraggable.startDrag();
+        (next as HTMLElement).ondragend = () => nextDraggable.endDrag();
+        (next as HTMLElement).ondragenter = () => { this.dragenter(); }
+        (next as HTMLElement).ondragleave = () => { this.dragleave(); }
+        this.nativeElement.appendChild(next);
+    }
 
-	protected onDragLeave() {
-		this.isTarget = false;
-		this.nativeElement.classList.remove("fren-hover");
-	}
+    protected onChildDrop(draggable: DraggableChild) {
+        if (!this.isTarget) {
+            let childIndex: number;
+            let child = this.children.find((item, index) => {
+                childIndex = index;
+                let result = item.node === draggable.nativeElement;
+                return result;
+            });
+            if (child) {
+                this.children.splice(childIndex, 1);
+                this.nativeElement.removeChild(child.node);
+            }
+        }
+    }
 
-	protected static startChildDrag(element: any, dragService: DragService) {
-		dragService.startDrag(element);
-	}
+    protected onDragEnter() {
+        let keys: string[];
+        if (this.options && this.options.enabledContainers) {
+            keys = Object.keys(this.options.enabledContainers);
+        }
+        if (this.dragService.isContainerValid(keys)) {
+            this.isTarget = true;
+            this.dragService.enterDrag(this);
+            this.nativeElement.classList.add("fren-hover");
+        }
+    }
 
-	protected static endChildDrag(element: any, dragService: DragService) {
-		dragService.endDrag(element);
-	}
+    protected onDragLeave() {
+        this.isTarget = false;
+        this.dragService.leaveDrag();
+        this.nativeElement.classList.remove("fren-hover");
+    }
 }

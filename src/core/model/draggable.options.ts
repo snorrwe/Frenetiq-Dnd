@@ -4,6 +4,5 @@ export interface DraggableOptions extends CoreOptions{
 
 }
 
-export const DefaultOptions: CoreOptions = {
-	isDisabled: false
+export const DefaultOptions: DraggableOptions = {
 }

@@ -1,5 +1,6 @@
 export interface CoreOptions{
-	isDisabled?: boolean;
+    isDisabled?: boolean;
+    enabledContainers?: {[key: string]: boolean};
 }
 
 export const DefaultOptions: CoreOptions = {
