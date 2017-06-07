@@ -10,8 +10,10 @@ var DraggableDirective = (function (_super) {
         var _this = _super.call(this, dragService) || this;
         _this.elementRef = elementRef;
         _this.viewContainer = viewContainer;
-        if (!_this.options)
-            _this.options = draggable_options_1.DefaultOptions;
+        _this.onDragStartEmitter = new core_1.EventEmitter();
+        _this.onDragEndEmitter = new core_1.EventEmitter();
+        if (!_this._options)
+            _this._options = draggable_options_1.DefaultOptions;
         return _this;
     }
     Object.defineProperty(DraggableDirective.prototype, "nativeElement", {
@@ -22,38 +24,50 @@ var DraggableDirective = (function (_super) {
         configurable: true
     });
     DraggableDirective.prototype.ngOnInit = function () {
-        if (!this.options)
-            this.options = draggable_options_1.DefaultOptions;
-        this.elementRef.nativeElement.draggable = !this.options.isDisabled;
+        if (!this._options)
+            this._options = draggable_options_1.DefaultOptions;
+        this.elementRef.nativeElement.draggable = !this._options.isDisabled;
         this.elementRef.nativeElement.style.display = "block";
     };
     DraggableDirective.prototype.ngOnChanges = function () {
-        if (!this.options)
-            this.options = draggable_options_1.DefaultOptions;
-        this.elementRef.nativeElement.draggable = !this.options.isDisabled;
+        if (!this._options)
+            this._options = draggable_options_1.DefaultOptions;
+        this.elementRef.nativeElement.draggable = !this._options.isDisabled;
     };
-    DraggableDirective.prototype.startDrag = function () {
-        this.nativeElement.classList.add("fren-dragging");
-        _super.prototype.startDrag.call(this);
+    DraggableDirective.prototype.startDrag = function (event) {
+        _super.prototype.startDrag.call(this, event);
+        this.onDragStartEmitter.emit(this);
     };
     DraggableDirective.prototype.endDrag = function () {
-        this.nativeElement.classList.remove("fren-dragging");
         _super.prototype.endDrag.call(this);
+        this.onDragEndEmitter.emit(this);
     };
     return DraggableDirective;
 }(draggable_base_1.Draggable));
 __decorate([
     core_1.Input("options"),
     __metadata("design:type", Object)
-], DraggableDirective.prototype, "options", void 0);
+], DraggableDirective.prototype, "_options", void 0);
 __decorate([
     core_1.Input("drag-model"),
     __metadata("design:type", Object)
 ], DraggableDirective.prototype, "model", void 0);
 __decorate([
-    core_1.HostListener("dragstart"),
+    core_1.Output("onDragStart"),
+    __metadata("design:type", core_1.EventEmitter)
+], DraggableDirective.prototype, "onDragStartEmitter", void 0);
+__decorate([
+    core_1.Output("onDragEnd"),
+    __metadata("design:type", core_1.EventEmitter)
+], DraggableDirective.prototype, "onDragEndEmitter", void 0);
+__decorate([
+    core_1.Input("parent"),
+    __metadata("design:type", Object)
+], DraggableDirective.prototype, "parent", void 0);
+__decorate([
+    core_1.HostListener("dragstart", ["$event"]),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [DragEvent]),
     __metadata("design:returntype", void 0)
 ], DraggableDirective.prototype, "startDrag", null);
 __decorate([

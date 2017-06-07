@@ -1,12 +1,14 @@
 import { DraggableOptions } from '../model/draggable.options';
 import { DragService } from '../services/drag.service';
-export declare class Draggable {
+export declare abstract class Draggable {
     protected dragService: DragService;
-    protected options: DraggableOptions;
+    protected _options: DraggableOptions;
+    readonly options: DraggableOptions;
     private _model;
     model: any;
-    readonly nativeElement: HTMLElement;
+    readonly abstract nativeElement: HTMLElement;
+    readonly parent: any;
     constructor(dragService: DragService);
-    startDrag(): void;
+    startDrag(event: DragEvent): void;
     endDrag(): void;
 }

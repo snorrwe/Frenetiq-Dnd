@@ -24,6 +24,10 @@ export class DragService {
         this.onDropSubj = new Subject<DragContainerPair>();
     }
 
+    /**
+    * Checks if any of the given key-value pairs is a valid container
+    * Where key is the name of the container and value is if it is enabled
+    */
     isContainerValid(containers: { key: string, value: boolean }[]) {
         if (!containers || !containers.length) {
             return true;
@@ -36,24 +40,39 @@ export class DragService {
         return false;
     }
 
+    /**
+    * Fires an onDrop event with the passed parameters
+    */
     drop(draggable: Draggable, container: ContainerDirective) {
         this.onDropSubj.next({ draggable: draggable, container: container });
     }
 
+    /**
+    * Updated the curren target container with the given container
+    */
     enterDrag(container: ContainerDirective) {
         this.currentTarget = container;
     }
 
+    /**
+    * Removes the current target container
+    */
     leaveDrag() {
         this.currentTarget = null;
     }
 
+    /**
+    * Starts the drag process
+    */
     startDrag(draggable: Draggable, validContainers?: { [key: string]: boolean }) {
-        this.validContainers = validContainers
         this.current = draggable;
+        this.validContainers = validContainers
         this.onDragStartSubj.next(draggable);
     }
 
+    /**
+    * Ends the drag process
+    */
     endDrag(draggable: Draggable) {
         this.onDragEndSubj.next(draggable);
         if (!this.currentTarget) {
@@ -63,18 +82,30 @@ export class DragService {
         delete this.currentTarget;
     }
 
+    /**
+    * Fired when draggable is dropped on a container
+    */
     onDrop(): Observable<DragContainerPair> {
         return this.onDropSubj.asObservable();
     }
 
+    /**
+    * Fired when the drag process begins
+    */
     onDragStart(): Observable<Draggable> {
         return this.onDragStartSubj.asObservable();
     }
 
+    /**
+    * Fired when the drag process ends
+    */
     onDragEnd(): Observable<Draggable> {
         return this.onDragEndSubj.asObservable();
     }
 
+    /**
+    * Fired when the drag process ends over no - or an invalid - container
+    */
     onMiss(): Observable<Draggable> {
         return this.onMissSubj.asObservable();
     }

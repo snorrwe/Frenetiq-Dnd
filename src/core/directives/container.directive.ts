@@ -38,7 +38,7 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
     protected subscriptions: Subscription[];
     protected children: { model?: any, node: Node }[];
 
-    protected get nativeElement(): HTMLElement {
+    get nativeElement(): HTMLElement {
         return this.elementRef.nativeElement;
     }
 

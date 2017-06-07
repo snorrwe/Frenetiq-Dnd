@@ -1,1 +1,1 @@
-{"version":3,"file":"draggable.options.js","sourceRoot":"","sources":["../../../src/core/model/draggable.options.ts"],"names":[],"mappings":";;AAMa,QAAA,cAAc,GAAgB;IAC1C,UAAU,EAAE,KAAK;CACjB,CAAA"}
+{"version":3,"file":"draggable.options.js","sourceRoot":"","sources":["../../../src/core/model/draggable.options.ts"],"names":[],"mappings":";;AAMa,QAAA,cAAc,GAAqB,EAC/C,CAAA"}

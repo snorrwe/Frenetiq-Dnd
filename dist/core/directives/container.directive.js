@@ -4,39 +4,33 @@ var core_1 = require("@angular/core");
 var drag_service_1 = require("../services/drag.service");
 var draggable_base_1 = require("./draggable.base");
 var container_options_1 = require("../model/container.options");
-var DraggableChild = (function (_super) {
-    __extends(DraggableChild, _super);
-    function DraggableChild(service, parent, nativeElement) {
+var DraggableClone = (function (_super) {
+    __extends(DraggableClone, _super);
+    function DraggableClone(draggable, service, parent) {
         var _this = _super.call(this, service) || this;
         _this.parent = parent;
-        _this.nativeElement = nativeElement;
+        _this._options = draggable.options;
+        _this._nativeElement = draggable.nativeElement.cloneNode(true);
         return _this;
     }
-    return DraggableChild;
+    Object.defineProperty(DraggableClone.prototype, "nativeElement", {
+        get: function () { return this._nativeElement; },
+        enumerable: true,
+        configurable: true
+    });
+    return DraggableClone;
 }(draggable_base_1.Draggable));
+exports.DraggableClone = DraggableClone;
 var ContainerDirective = (function () {
-    function ContainerDirective(elementRef, dragService, viewContainerRef, componentFactoryResolver) {
-        var _this = this;
+    function ContainerDirective(elementRef, dragService) {
         this.elementRef = elementRef;
         this.dragService = dragService;
-        this.viewContainerRef = viewContainerRef;
-        this.componentFactoryResolver = componentFactoryResolver;
         this.children = [];
         if (!this.options)
             this.options = container_options_1.DefaultOptions;
-        var onDragStartSub = this.dragService
-            .onDragStart()
-            .subscribe(function (draggable) { });
-        var onDragEndSub = this.dragService
-            .onDragEnd()
-            .subscribe(function (draggable) {
-            if (draggable instanceof DraggableChild && draggable.parent === _this) {
-                _this.onChildDrop(draggable);
-            }
-            else if (_this.isTarget && !_this.options.isDisabled) {
-                _this.onDrop(draggable);
-            }
-        });
+        this.onDropEmitter = new core_1.EventEmitter();
+        var onDragStartSub = this.subscribeToDragStart();
+        var onDragEndSub = this.subscribeToDragEnd();
         this.subscriptions = [onDragStartSub, onDragEndSub];
     }
     Object.defineProperty(ContainerDirective.prototype, "nativeElement", {
@@ -46,6 +40,24 @@ var ContainerDirective = (function () {
         enumerable: true,
         configurable: true
     });
+    ContainerDirective.prototype.subscribeToDragStart = function () {
+        return this.dragService
+            .onDragStart()
+            .subscribe(function (draggable) { });
+    };
+    ContainerDirective.prototype.subscribeToDragEnd = function () {
+        var _this = this;
+        return this.dragService
+            .onDragEnd()
+            .subscribe(function (draggable) {
+            if (draggable.parent === _this) {
+                _this.onChildDrop(draggable);
+            }
+            else if (_this.isTarget && !_this.options.isDisabled) {
+                _this.onDrop(draggable);
+            }
+        });
+    };
     ContainerDirective.prototype.ngOnInit = function () {
         if (!this.options)
             this.options = container_options_1.DefaultOptions;
@@ -55,12 +67,13 @@ var ContainerDirective = (function () {
             this.options = container_options_1.DefaultOptions;
     };
     ContainerDirective.prototype.ngOnDestroy = function () {
-        this.subscriptions.forEach(function (sub) {
+        this.subscriptions
+            .forEach(function (sub) {
             sub.unsubscribe();
         });
     };
-    ContainerDirective.prototype.dragenter = function () {
-        this.onDragEnter();
+    ContainerDirective.prototype.dragover = function (event) {
+        this.onDragOver(event);
     };
     ContainerDirective.prototype.dragleave = function () {
         var _this = this;
@@ -73,20 +86,24 @@ var ContainerDirective = (function () {
             console.warn("onDrop called without draggable!");
             return;
         }
-        var next = draggable.nativeElement.cloneNode(true);
-        this.initClone(next, draggable.model);
+        if (!this.options.isCloningDisabled) {
+            this.initClone(draggable);
+        }
+        this.dragleave();
         this.dragService.drop(draggable, this);
+        this.onDropEmitter.emit({ draggable: draggable, container: this });
     };
-    ContainerDirective.prototype.initClone = function (next, model) {
-        var _this = this;
-        this.children.push({ node: next, model: model });
-        var nextDraggable = new DraggableChild(this.dragService, this, next);
-        nextDraggable.model = next;
-        next.ondragstart = function () { return nextDraggable.startDrag(); };
-        next.ondragend = function () { return nextDraggable.endDrag(); };
-        next.ondragenter = function () { _this.dragenter(); };
-        next.ondragleave = function () { _this.dragleave(); };
-        this.nativeElement.appendChild(next);
+    ContainerDirective.prototype.initClone = function (draggable) {
+        var clone = new DraggableClone(draggable, this.dragService, this);
+        var node = clone.nativeElement;
+        clone.model = node;
+        node.draggable = this.options.areChildrenDraggable;
+        if (node.draggable) {
+            node.ondragstart = function (event) { return clone.startDrag(event); };
+            node.ondragend = function () { return clone.endDrag(); };
+        }
+        this.children.push({ node: node, model: draggable.model });
+        this.nativeElement.appendChild(node);
     };
     ContainerDirective.prototype.onChildDrop = function (draggable) {
         if (!this.isTarget) {
@@ -102,19 +119,30 @@ var ContainerDirective = (function () {
             }
         }
     };
-    ContainerDirective.prototype.onDragEnter = function () {
-        this.isTarget = true;
-        this.nativeElement.classList.add("fren-hover");
+    ContainerDirective.prototype.onDragOver = function (event) {
+        var _this = this;
+        var keys;
+        if (this.options && this.options.enabledContainers) {
+            var allKeys = Object.keys(this.options.enabledContainers);
+            keys = allKeys
+                .map(function (key) {
+                return {
+                    key: key,
+                    value: _this.options.enabledContainers[key]
+                };
+            });
+        }
+        if (this.dragService.isContainerValid(keys)) {
+            event.preventDefault();
+            this.isTarget = true;
+            this.dragService.enterDrag(this);
+            this.nativeElement.classList.add("fren-hover");
+        }
     };
     ContainerDirective.prototype.onDragLeave = function () {
         this.isTarget = false;
+        this.dragService.leaveDrag();
         this.nativeElement.classList.remove("fren-hover");
-    };
-    ContainerDirective.startChildDrag = function (element, dragService) {
-        dragService.startDrag(element);
-    };
-    ContainerDirective.endChildDrag = function (element, dragService) {
-        dragService.endDrag(element);
     };
     return ContainerDirective;
 }());
@@ -123,11 +151,15 @@ __decorate([
     __metadata("design:type", Object)
 ], ContainerDirective.prototype, "options", void 0);
 __decorate([
-    core_1.HostListener('dragenter'),
+    core_1.Output("onDrop"),
+    __metadata("design:type", core_1.EventEmitter)
+], ContainerDirective.prototype, "onDropEmitter", void 0);
+__decorate([
+    core_1.HostListener('dragover', ["$event"]),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [DragEvent]),
     __metadata("design:returntype", void 0)
-], ContainerDirective.prototype, "dragenter", null);
+], ContainerDirective.prototype, "dragover", null);
 __decorate([
     core_1.HostListener('dragleave'),
     __metadata("design:type", Function),
@@ -140,9 +172,7 @@ ContainerDirective = __decorate([
         exportAs: 'frenetiq-container'
     }),
     __metadata("design:paramtypes", [core_1.ElementRef,
-        drag_service_1.DragService,
-        core_1.ViewContainerRef,
-        core_1.ComponentFactoryResolver])
+        drag_service_1.DragService])
 ], ContainerDirective);
 exports.ContainerDirective = ContainerDirective;
 //# sourceMappingURL=container.directive.js.map
