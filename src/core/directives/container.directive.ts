@@ -57,10 +57,10 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
     }
 
     private subscribeToDragEnd() {
-        return  this.dragService
+        return this.dragService
             .onDragEnd()
             .subscribe((draggable) => {
-                if (draggable instanceof DraggableChild && draggable.parent === this) {
+                if (draggable.parent === this) {
                     this.onChildDrop(draggable);
                 } else if (this.isTarget && !this.options.isDisabled) {
                     this.onDrop(draggable);
@@ -83,9 +83,9 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
             });
     }
 
-    @HostListener('dragenter')
-    protected dragenter() {
-        this.onDragEnter();
+    @HostListener('dragover', ["$event"])
+    protected dragover(event: DragEvent) {
+        this.onDragOver(event);
     }
 
     @HostListener('dragleave')
@@ -104,19 +104,18 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
             let next = draggable.nativeElement.cloneNode(true);
             this.initClone(next, draggable.model);
         }
+        this.dragleave();
         this.dragService.drop(draggable, this);
         this.onDropEmitter.emit({ draggable: draggable, container: this });
     }
 
-    private initClone(next: Node, model: any) {
-        this.children.push({ node: next, model: model });
-        let nextDraggable = new DraggableChild(this.dragService, this, next as HTMLElement);
-        nextDraggable.model = next;
-        (next as HTMLElement).ondragstart = () => nextDraggable.startDrag();
-        (next as HTMLElement).ondragend = () => nextDraggable.endDrag();
-        (next as HTMLElement).ondragenter = () => { this.dragenter(); }
-        (next as HTMLElement).ondragleave = () => { this.dragleave(); }
-        this.nativeElement.appendChild(next);
+    private initClone(node: Node, model: any) {
+        this.children.push({ node: node, model: model });
+        let draggable = new DraggableChild(this.dragService, this, node as HTMLElement);
+        draggable.model = node;
+        (node as HTMLElement).ondragstart = (event) => draggable.startDrag(event);
+        (node as HTMLElement).ondragend = () => draggable.endDrag();
+        this.nativeElement.appendChild(node);
     }
 
     protected onChildDrop(draggable: DraggableChild) {
@@ -134,12 +133,13 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
         }
     }
 
-    protected onDragEnter() {
+    protected onDragOver(event: DragEvent) {
         let keys: string[];
         if (this.options && this.options.enabledContainers) {
             keys = Object.keys(this.options.enabledContainers);
         }
         if (this.dragService.isContainerValid(keys)) {
+            event.preventDefault();
             this.isTarget = true;
             this.dragService.enterDrag(this);
             this.nativeElement.classList.add("fren-hover");

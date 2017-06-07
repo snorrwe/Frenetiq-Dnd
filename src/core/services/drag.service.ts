@@ -31,14 +31,12 @@ export class DragService {
         if (!containers || !containers.length) {
             return true;
         }
-        let result = false;
         for (let container of containers) {
             if (this.validContainers[container]) {
-                result = true;
-                break;
+                return true;
             }
         }
-        return result;
+        return false;
     }
 
     enterDrag(container: ContainerDirective) {

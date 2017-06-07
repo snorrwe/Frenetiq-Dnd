@@ -16,7 +16,7 @@ export abstract class Draggable {
         if (!this.options) this.options = DefaultOptions;
     }
 
-    startDrag() {
+    startDrag(event: DragEvent) {
         if (this.nativeElement) {
             this.nativeElement.classList.add("fren-dragging");
         }

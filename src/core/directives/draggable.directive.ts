@@ -42,15 +42,15 @@ export class DraggableDirective extends Draggable implements OnInit, OnChanges {
 		this.elementRef.nativeElement.draggable = !this.options.isDisabled;
 	}
 
-	@HostListener("dragstart")
-	startDrag() {
-        super.startDrag();
+	@HostListener("dragstart", ["$event"])
+    startDrag(event: DragEvent) {
+        super.startDrag(event);
 	    this.onDragStartEmitter.emit(this);
 	}
 
 	@HostListener("dragend")
 	endDrag() {
         super.endDrag();
-	    this.onDragEndEmitter.emit(this);
+        this.onDragEndEmitter.emit(this);
 	}
 } 
