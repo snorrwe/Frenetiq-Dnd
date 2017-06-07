@@ -46,6 +46,8 @@ Thumbs.db
 .idea/
 *.swp
 
+docs
+
 *.js
 *.js.map
 *.d.ts

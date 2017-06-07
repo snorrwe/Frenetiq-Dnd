@@ -1,7 +1,7 @@
 {
   "mode": "modules",
   "out": "docs",
-  "theme": "default",
+  "theme": "node_modules/typedoc-markdown-theme/bin",
   "ignoreCompilerErrors": "true",
   "experimentalDecorators": "true",
   "emitDecoratorMetadata": "true",
