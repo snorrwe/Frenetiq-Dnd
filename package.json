@@ -25,7 +25,8 @@
     "docs": "typedoc --options typedoc.json src/core",
     "start:hmr": "npm run server -- --hot",
     "postinstall": "npm run webdriver-update",
-    "travis-test": "./node_modules/.bin/karma start --browsers Firefox --single-run"
+    "travis-test": "./node_modules/.bin/karma start --browsers Firefox --single-run",
+    "publish-demo": "webpack"
   },
   "dependencies": {
     "@angular/common": "^2.4.0",

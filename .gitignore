@@ -60,3 +60,5 @@ docs
 !webpack.config.js
 *.sublime-workspace
 *.sublime-project
+
+demo_dist
