@@ -100,7 +100,8 @@ Please refer to the [Wiki](https://github.com/snorrwe/Frenetiq-Dnd/wiki/)
 * build files and watch: `npm run watch`
 
 ## Testing
-Please note that all pull requests must pass the tests in order to be merged into _master_.
+* Please note that all pull requests must pass the tests in order to be merged into _master_. 
+This project uses [https://travis-ci.org](https://travis-ci.org) to enforce successful builds on _master_.
 
 * Running the tests locally:
 	* single run: `npm run test`
