@@ -50,9 +50,10 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
         if (!this.options) this.options = DefaultOptions;
         this.onDropEmitter = new EventEmitter<DragContainerPair>();
 
-        let onDragStartSub = this.subscribeToDragStart();
-        let onDragEndSub = this.subscribeToDragEnd();
-        this.subscriptions = [onDragStartSub, onDragEndSub];
+        this.subscriptions = [
+            this.subscribeToDragStart()
+            , this.subscribeToDragEnd()
+        ];
     }
 
     private subscribeToDragStart() {

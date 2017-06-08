@@ -12,9 +12,9 @@ export class DraggableDirective extends Draggable implements OnInit, OnChanges {
 
 	@Input("options") protected _options: DraggableOptions;
     @Input("drag-model") readonly model: any;
+    @Input("parent") readonly parent: any;
     @Output("onDragStart") protected onDragStartEmitter: EventEmitter<Draggable>;
     @Output("onDragEnd") protected onDragEndEmitter: EventEmitter<Draggable>;
-    @Input("parent") readonly parent: any;
 
 	get nativeElement(): HTMLElement {
 		return this.elementRef.nativeElement;
