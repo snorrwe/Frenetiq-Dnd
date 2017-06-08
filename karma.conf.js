@@ -26,7 +26,7 @@ module.exports = function (config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      './karma-shim.js': ['webpack', 'sourcemap']
+      './karma-shim.js': ['webpack']
     },
 
     webpack: webpackConfig,
@@ -44,7 +44,7 @@ module.exports = function (config) {
     // test results reporter to use
     // possible values: 'dots', 'progress', 'mocha'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ["mocha"],
+    reporters: ["dots"],
 
     // web server port
     port: 9876,
@@ -65,23 +65,24 @@ module.exports = function (config) {
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: true
+    singleRun: true,
+
+    plugins: [
+      'karma-jasmine', 'karma-chrome-launcher', 'karma-webpack'
+    ],
+
+    browserNoActivityTimeout: 30000,
+    customLaunchers: {  
+      Chrome_travis_ci: {
+        base: 'Chrome',
+        flags: ['--no-sandbox']
+      }
+    }
   };
 
-  if (!isTestWatch) {
-    _config.reporters.push("coverage");
-
-    _config.coverageReporter = {
-      dir: 'coverage/',
-      reporters: [{
-        type: 'json',
-        dir: 'coverage',
-        subdir: 'json',
-        file: 'coverage-final.json'
-      }]
-    };
+  if(process.env.TRAVIS) { 
+    _config.browsers = ['Chrome_travis_ci'];
   }
-
+  
   config.set(_config);
-
 };

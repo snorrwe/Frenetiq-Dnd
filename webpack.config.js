@@ -45,7 +45,7 @@ module.exports = function makeWebpackConfig() {
    * Entry
    * Reference: http://webpack.github.io/docs/configuration.html#entry
    */
-  config.entry = isTest ? {} : {
+  config.entry = {
     'polyfills': './src/polyfills.ts',
     'vendor': './src/vendor.ts',
     'app': './src/main.ts' // our angular app
@@ -72,11 +72,6 @@ module.exports = function makeWebpackConfig() {
   };
 
   var atlOptions = '';
-  if (isTest && !isTestWatch) {
-    // awesome-typescript-loader needs to output inlineSourceMap for code coverage to work with source maps.
-    atlOptions = 'inlineSourceMap=true&sourceMap=false';
-  }
-
   /**
    * Loaders
    * Reference: http://webpack.github.io/docs/configuration.html#module-loaders
@@ -128,17 +123,6 @@ module.exports = function makeWebpackConfig() {
       {test: /\.html$/, loader: 'raw-loader',  exclude: root('src', 'public')}
     ]
   };
-
-  if (isTest && !isTestWatch) {
-    // instrument only testing sources with Istanbul, covers ts files
-    config.module.rules.push({
-      test: /\.ts$/,
-      enforce: 'post',
-      include: path.resolve('src'),
-      loader: 'istanbul-instrumenter-loader',
-      exclude: [/\.spec\.ts$/, /\.e2e\.ts$/, /node_modules/]
-    });
-  }
 
   /**
    * Plugins
