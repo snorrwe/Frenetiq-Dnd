@@ -53,6 +53,18 @@ export class AppModule {
 
 ```
 
+* CSS
+	* FrenetiqDnd uses the `fren-drag` css class on items that are being _dragged_ 
+	* FrenetiqDnd uses the `fren-hover` css class on valid containers when you _drag_ an item over it.
+
+```css
+
+.fren-drag{
+	background-color:red; /* Make dragged items red */	
+}
+
+```
+
 * You can listen to events either via the *Directives* or by subscribing to the `DragService`
 * See the [Wiki](https://github.com/snorrwe/Frenetiq-Dnd/wiki/DragService) for more information about the service and its API.
 
