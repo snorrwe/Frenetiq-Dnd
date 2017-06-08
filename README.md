@@ -101,7 +101,8 @@ Please refer to the [Wiki](https://github.com/snorrwe/Frenetiq-Dnd/wiki/)
 
 ## Testing
 Please note that all pull requests must pass the tests in order to be merged into _master_.
-*Running the tests locally:
+
+* Running the tests locally:
 	* single run: `npm run test`
 	* watch: `npm run test-watch`
 
