@@ -33,6 +33,7 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
 
     @Input("options") protected options: ContainerOptions;
     @Output("onDrop") protected onDropEmitter: EventEmitter<DragContainerPair>;
+    @Output("onChildDrop") protected onChildDropEmitter: EventEmitter<DragContainerPair>;
 
     protected isTarget: boolean;
     protected subscriptions: Subscription[];
@@ -49,6 +50,7 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
         this.children = [];
         if (!this.options) this.options = DefaultOptions;
         this.onDropEmitter = new EventEmitter<DragContainerPair>();
+        this.onChildDropEmitter = new EventEmitter<DragContainerPair>();
 
         this.subscriptions = [
             this.subscribeToDragStart()
@@ -117,18 +119,18 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
     private initClone(draggable: Draggable) {
         let clone = new DraggableClone(draggable, this.dragService, this);
         let node = clone.nativeElement;
-        clone.model = node;
+        clone.dragModel = node;
         node.draggable = this.options.areChildrenDraggable;
         if (node.draggable) {
             node.ondragstart = (event) => clone.startDrag(event);
             node.ondragend = () => clone.endDrag();
         }
-        this.children.push({ node: node, model: draggable.model });
+        this.children.push({ node: node, model: draggable.dragModel });
         this.nativeElement.appendChild(node);
     }
 
     protected onChildDrop(draggable: DraggableClone) {
-        if (!this.isTarget) {
+        if (!this.isTarget && this.options.removeDroppedChildren){
             let childIndex: number;
             let child = this.children.find((item, index) => {
                 childIndex = index;
@@ -140,17 +142,18 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
                 this.nativeElement.removeChild(child.node);
             }
         }
+        this.onChildDropEmitter.emit({draggable: draggable, container: this});
     }
 
     protected onDragOver(event: DragEvent) {
         let keys: { key: string, value: boolean }[];
-        if (this.options && this.options.enabledContainers) {
-            let allKeys = Object.keys(this.options.enabledContainers);
+        if (this.options && this.options.containerTags) {
+            let allKeys = Object.keys(this.options.containerTags);
             keys = allKeys
                 .map((key) => {
                     return {
                         key: key
-                        , value: this.options.enabledContainers[key]
+                        , value: this.options.containerTags[key]
                     }
                 });
         }

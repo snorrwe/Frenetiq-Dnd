@@ -11,7 +11,7 @@ import { Draggable } from './draggable.base';
 export class DraggableDirective extends Draggable implements OnInit, OnChanges {
 
 	@Input("options") protected _options: DraggableOptions;
-    @Input("drag-model") readonly model: any;
+    @Input("dragModel") readonly dragModel: any;
     @Input("parent") readonly parent: any;
     @Output("onDragStart") protected onDragStartEmitter: EventEmitter<Draggable>;
     @Output("onDragEnd") protected onDragEndEmitter: EventEmitter<Draggable>;

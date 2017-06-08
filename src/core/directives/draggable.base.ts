@@ -7,8 +7,8 @@ export abstract class Draggable {
     get options() { return this._options; }
 
     private _model: any;
-    get model() { return this._model; }
-    set model(value) { this._model = value; }
+    get dragModel() { return this._model; }
+    set dragModel(value) { this._model = value; }
 
     abstract get nativeElement(): HTMLElement;
     readonly parent: any;
@@ -21,7 +21,7 @@ export abstract class Draggable {
         if (this.nativeElement) {
             this.nativeElement.classList.add("fren-dragging");
         }
-        this.dragService.startDrag(this, this._options.enabledContainers);
+        this.dragService.startDrag(this, this._options.containerTags);
     }
 
     endDrag() {
