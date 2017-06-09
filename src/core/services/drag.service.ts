@@ -48,7 +48,7 @@ export class DragService {
     }
 
     /**
-    * Updated the curren target container with the given container
+    * Updates the current target container with the given container
     */
     enterDrag(container: ContainerDirective) {
         this.currentTarget = container;
@@ -66,7 +66,7 @@ export class DragService {
     */
     startDrag(draggable: Draggable, validContainers?: { [key: string]: boolean }) {
         this.current = draggable;
-        this.validContainers = validContainers
+        this.validContainers = validContainers || {}
         this.onDragStartSubj.next(draggable);
     }
 

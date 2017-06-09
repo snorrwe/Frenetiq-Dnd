@@ -5,9 +5,7 @@ import { DragService } from '../services/drag.service';
 import { Draggable } from './draggable.base';
 import { DraggableDirective } from './draggable.directive';
 
-import { ContainerOptions, DefaultOptions } from '../model/container.options';
-import { DraggableOptions } from '../model/draggable.options';
-import { DragContainerPair } from '../model/draggable-container.pair';
+import { ContainerOptions, ContainerDefaultOptions, DraggableOptions, DragContainerPair } from '../ngx-frenetiq-dnd';
 
 export class DraggableClone extends Draggable {
 
@@ -33,7 +31,6 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
 
     @Input("options") protected options: ContainerOptions;
     @Output("onDrop") protected onDropEmitter: EventEmitter<DragContainerPair>;
-    @Output("onChildDrop") protected onChildDropEmitter: EventEmitter<DragContainerPair>;
 
     protected isTarget: boolean;
     protected subscriptions: Subscription[];
@@ -48,14 +45,12 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
         , protected dragService: DragService
     ) {
         this.children = [];
-        if (!this.options) this.options = DefaultOptions;
+        if (!this.options) this.options = ContainerDefaultOptions;
         this.onDropEmitter = new EventEmitter<DragContainerPair>();
-        this.onChildDropEmitter = new EventEmitter<DragContainerPair>();
 
-        this.subscriptions = [
-            this.subscribeToDragStart()
-            , this.subscribeToDragEnd()
-        ];
+        let onDragStartSub = this.subscribeToDragStart();
+        let onDragEndSub = this.subscribeToDragEnd();
+        this.subscriptions = [onDragStartSub, onDragEndSub];
     }
 
     private subscribeToDragStart() {
@@ -77,11 +72,11 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        if (!this.options) this.options = DefaultOptions;
+        if (!this.options) this.options = ContainerDefaultOptions;
     }
 
     ngOnChanges() {
-        if (!this.options) this.options = DefaultOptions;
+        if (!this.options) this.options = ContainerDefaultOptions;
     }
 
     ngOnDestroy() {
@@ -119,18 +114,18 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
     private initClone(draggable: Draggable) {
         let clone = new DraggableClone(draggable, this.dragService, this);
         let node = clone.nativeElement;
-        clone.dragModel = node;
+        clone.model = node;
         node.draggable = this.options.areChildrenDraggable;
         if (node.draggable) {
             node.ondragstart = (event) => clone.startDrag(event);
-            node.ondragend = () => clone.endDrag();
+            node.ondragend = (event) => clone.endDrag(event);
         }
-        this.children.push({ node: node, model: draggable.dragModel });
+        this.children.push({ node: node, model: draggable.model });
         this.nativeElement.appendChild(node);
     }
 
     protected onChildDrop(draggable: DraggableClone) {
-        if (!this.isTarget && this.options.removeDroppedChildren){
+        if (!this.isTarget) {
             let childIndex: number;
             let child = this.children.find((item, index) => {
                 childIndex = index;
@@ -142,18 +137,17 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
                 this.nativeElement.removeChild(child.node);
             }
         }
-        this.onChildDropEmitter.emit({draggable: draggable, container: this});
     }
 
     protected onDragOver(event: DragEvent) {
         let keys: { key: string, value: boolean }[];
-        if (this.options && this.options.containerTags) {
-            let allKeys = Object.keys(this.options.containerTags);
+        if (this.options && this.options.enabledContainers) {
+            let allKeys = Object.keys(this.options.enabledContainers);
             keys = allKeys
                 .map((key) => {
                     return {
                         key: key
-                        , value: this.options.containerTags[key]
+                        , value: this.options.enabledContainers[key]
                     }
                 });
         }

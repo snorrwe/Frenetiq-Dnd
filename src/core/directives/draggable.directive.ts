@@ -1,8 +1,8 @@
 import { Type, ViewContainerRef, Directive, Input, EventEmitter, Output, ElementRef, HostListener, OnInit, OnChanges } from '@angular/core';
 
 import { DragService } from '../services/drag.service';
-import { DefaultOptions, DraggableOptions } from '../model/draggable.options';
 import { Draggable } from './draggable.base';
+import { DraggableDefaultOptions, DraggableOptions } from '../ngx-frenetiq-dnd';
 
 @Directive({
 	selector: '[frenetiq-draggable]'
@@ -11,10 +11,10 @@ import { Draggable } from './draggable.base';
 export class DraggableDirective extends Draggable implements OnInit, OnChanges {
 
 	@Input("options") protected _options: DraggableOptions;
-    @Input("dragModel") readonly dragModel: any;
-    @Input("parent") readonly parent: any;
+    @Input("dragModel") readonly model: any;
     @Output("onDragStart") protected onDragStartEmitter: EventEmitter<Draggable>;
     @Output("onDragEnd") protected onDragEndEmitter: EventEmitter<Draggable>;
+    @Input("parent") readonly parent: any;
 
 	get nativeElement(): HTMLElement {
 		return this.elementRef.nativeElement;
@@ -28,29 +28,29 @@ export class DraggableDirective extends Draggable implements OnInit, OnChanges {
         super(dragService);
 	    this.onDragStartEmitter = new EventEmitter<Draggable>();
         this.onDragEndEmitter = new EventEmitter<Draggable>();
-		if (!this._options) this._options = DefaultOptions;
+        if (!this._options) this._options = DraggableDefaultOptions;
 	}
 
 	ngOnInit() {
-		if (!this._options) this._options = DefaultOptions;
+        if (!this._options) this._options = DraggableDefaultOptions;
 		this.elementRef.nativeElement.draggable = !this._options.isDisabled;
-		(this.elementRef.nativeElement as HTMLElement).style.display = "block";
 	}
 
 	ngOnChanges() {
-		if (!this._options) this._options = DefaultOptions;
+        if (!this._options) this._options = DraggableDefaultOptions;
 		this.elementRef.nativeElement.draggable = !this._options.isDisabled;
 	}
 
 	@HostListener("dragstart", ["$event"])
     startDrag(event: DragEvent) {
+        event.cancelBubble = true;
         super.startDrag(event);
 	    this.onDragStartEmitter.emit(this);
 	}
 
-	@HostListener("dragend")
-	endDrag() {
-        super.endDrag();
+	@HostListener("dragend", ["$event"])
+    endDrag(event: DragEvent) {
+        super.endDrag(event);
         this.onDragEndEmitter.emit(this);
 	}
 } 

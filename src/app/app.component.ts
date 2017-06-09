@@ -9,7 +9,7 @@ import { ContainerOptions, DraggableOptions } from '../core/ngx-frenetiq-dnd';
 export class AppComponent {
 
 	dragoptionsI: DraggableOptions = {
-		containerTags: { "foobar": true }
+		enabledContainers: { "foobar": true }
 	}
 
 	optionsI: ContainerOptions = {
@@ -25,10 +25,10 @@ export class AppComponent {
 	}
 
 	optionsIV: ContainerOptions = {
-		containerTags: { "foobar": true }
+		enabledContainers: { "foobar": true }
 	}
 
 	optionsV: ContainerOptions = {
-		containerTags: { "foobar": false }
+		enabledContainers: { "foobar": false }
 	}
 } 

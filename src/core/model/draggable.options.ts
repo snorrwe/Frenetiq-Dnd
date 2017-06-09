@@ -6,3 +6,4 @@ export interface DraggableOptions extends CoreOptions{
 
 export const DefaultOptions: DraggableOptions = {
 }
+ 
