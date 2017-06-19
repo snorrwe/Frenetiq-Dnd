@@ -5,3 +5,4 @@ export interface CoreOptions {
     };
 }
 export declare const DefaultOptions: CoreOptions;
+export declare let getDefaultOptionsCopy: () => CoreOptions;

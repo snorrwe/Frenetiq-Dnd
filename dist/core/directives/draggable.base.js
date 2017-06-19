@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var draggable_options_1 = require("../model/draggable.options");
+var ngx_frenetiq_dnd_1 = require("../ngx-frenetiq-dnd");
 var Draggable = (function () {
     function Draggable(dragService) {
         this.dragService = dragService;
         if (!this._options)
-            this._options = draggable_options_1.DefaultOptions;
+            this._options = ngx_frenetiq_dnd_1.DraggableDefaultOptions;
     }
     Object.defineProperty(Draggable.prototype, "options", {
         get: function () { return this._options; },
@@ -24,7 +24,8 @@ var Draggable = (function () {
         }
         this.dragService.startDrag(this, this._options.enabledContainers);
     };
-    Draggable.prototype.endDrag = function () {
+    Draggable.prototype.endDrag = function (event) {
+        event.cancelBubble = true;
         if (this.nativeElement) {
             this.nativeElement.classList.remove("fren-dragging");
         }

@@ -24,7 +24,7 @@ export declare class DragService {
     */
     drop(draggable: Draggable, container: ContainerDirective): void;
     /**
-    * Updated the curren target container with the given container
+    * Updates the current target container with the given container
     */
     enterDrag(container: ContainerDirective): void;
     /**

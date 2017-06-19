@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var drag_service_1 = require("../services/drag.service");
 var draggable_base_1 = require("./draggable.base");
-var container_options_1 = require("../model/container.options");
+var ngx_frenetiq_dnd_1 = require("../ngx-frenetiq-dnd");
 var DraggableClone = (function (_super) {
     __extends(DraggableClone, _super);
     function DraggableClone(draggable, service, parent) {
@@ -27,7 +27,7 @@ var ContainerDirective = (function () {
         this.dragService = dragService;
         this.children = [];
         if (!this.options)
-            this.options = container_options_1.DefaultOptions;
+            this.options = ngx_frenetiq_dnd_1.ContainerDefaultOptions;
         this.onDropEmitter = new core_1.EventEmitter();
         var onDragStartSub = this.subscribeToDragStart();
         var onDragEndSub = this.subscribeToDragEnd();
@@ -60,11 +60,11 @@ var ContainerDirective = (function () {
     };
     ContainerDirective.prototype.ngOnInit = function () {
         if (!this.options)
-            this.options = container_options_1.DefaultOptions;
+            this.options = ngx_frenetiq_dnd_1.ContainerDefaultOptions;
     };
     ContainerDirective.prototype.ngOnChanges = function () {
         if (!this.options)
-            this.options = container_options_1.DefaultOptions;
+            this.options = ngx_frenetiq_dnd_1.ContainerDefaultOptions;
     };
     ContainerDirective.prototype.ngOnDestroy = function () {
         this.subscriptions
@@ -100,7 +100,7 @@ var ContainerDirective = (function () {
         node.draggable = this.options.areChildrenDraggable;
         if (node.draggable) {
             node.ondragstart = function (event) { return clone.startDrag(event); };
-            node.ondragend = function () { return clone.endDrag(); };
+            node.ondragend = function (event) { return clone.endDrag(event); };
         }
         this.children.push({ node: node, model: draggable.model });
         this.nativeElement.appendChild(node);

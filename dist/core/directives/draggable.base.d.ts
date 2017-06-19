@@ -1,4 +1,4 @@
-import { DraggableOptions } from '../model/draggable.options';
+import { DraggableOptions } from '../ngx-frenetiq-dnd';
 import { DragService } from '../services/drag.service';
 export declare abstract class Draggable {
     protected dragService: DragService;
@@ -10,5 +10,5 @@ export declare abstract class Draggable {
     readonly parent: any;
     constructor(dragService: DragService);
     startDrag(event: DragEvent): void;
-    endDrag(): void;
+    endDrag(event: DragEvent): void;
 }

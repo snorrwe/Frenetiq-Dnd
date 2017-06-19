@@ -32,7 +32,7 @@ var DragService = (function () {
         this.onDropSubj.next({ draggable: draggable, container: container });
     };
     /**
-    * Updated the curren target container with the given container
+    * Updates the current target container with the given container
     */
     DragService.prototype.enterDrag = function (container) {
         this.currentTarget = container;
@@ -48,7 +48,7 @@ var DragService = (function () {
     */
     DragService.prototype.startDrag = function (draggable, validContainers) {
         this.current = draggable;
-        this.validContainers = validContainers;
+        this.validContainers = validContainers || {};
         this.onDragStartSubj.next(draggable);
     };
     /**

@@ -1,7 +1,7 @@
 import { ViewContainerRef, EventEmitter, ElementRef, OnInit, OnChanges } from '@angular/core';
 import { DragService } from '../services/drag.service';
-import { DraggableOptions } from '../model/draggable.options';
 import { Draggable } from './draggable.base';
+import { DraggableOptions } from '../ngx-frenetiq-dnd';
 export declare class DraggableDirective extends Draggable implements OnInit, OnChanges {
     readonly elementRef: ElementRef;
     readonly viewContainer: ViewContainerRef;
@@ -15,5 +15,5 @@ export declare class DraggableDirective extends Draggable implements OnInit, OnC
     ngOnInit(): void;
     ngOnChanges(): void;
     startDrag(event: DragEvent): void;
-    endDrag(): void;
+    endDrag(event: DragEvent): void;
 }
