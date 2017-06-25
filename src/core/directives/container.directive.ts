@@ -5,7 +5,9 @@ import { DragService } from '../services/drag.service';
 import { Draggable } from './draggable.base';
 import { DraggableDirective } from './draggable.directive';
 
-import { ContainerOptions, ContainerDefaultOptions, DraggableOptions, DragContainerPair } from '../declaration/model';
+import { DefaultOptions as DraggableOptions } from '../model/draggable.options';
+import { ContainerOptions, DefaultOptions as ContainerDefaultOptions } from '../model/container.options';
+import { DragContainerPair } from '../model/draggable-container.pair';
 
 export class DraggableClone extends Draggable {
 
