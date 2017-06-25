@@ -5,7 +5,7 @@ import { DragService } from '../services/drag.service';
 import { Draggable } from './draggable.base';
 import { DraggableDirective } from './draggable.directive';
 
-import { ContainerOptions, ContainerDefaultOptions, DraggableOptions, DragContainerPair } from '../ngx-frenetiq-dnd';
+import { ContainerOptions, ContainerDefaultOptions, DraggableOptions, DragContainerPair } from '../declaration/model';
 
 export class DraggableClone extends Draggable {
 
@@ -23,6 +23,11 @@ export class DraggableClone extends Draggable {
     }
 }
 
+export enum DragEventType {
+    Enter
+    , Leave
+}
+
 @Directive({
     selector: '[frenetiq-container]'
     , exportAs: 'frenetiq-container'
@@ -35,6 +40,8 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
     protected isTarget: boolean;
     protected subscriptions: Subscription[];
     protected children: { model?: any, node: Node }[];
+    protected eventQueue: { type: DragEventType, event: any }[];
+    protected isLooping: boolean;
 
     get nativeElement(): HTMLElement {
         return this.elementRef.nativeElement;
@@ -45,6 +52,7 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
         , protected dragService: DragService
     ) {
         this.children = [];
+        this.eventQueue = [];
         if (!this.options) this.options = ContainerDefaultOptions;
         this.onDropEmitter = new EventEmitter<DragContainerPair>();
 
@@ -84,18 +92,59 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
             .forEach((sub) => {
                 sub.unsubscribe();
             });
+        this.isLooping = false;
+    }
+
+    protected startEventLoop() {
+        this.isLooping = true;
+        this.eventQueue = [];
+        requestAnimationFrame(() => {
+            this.eventLoop();
+        });
+    }
+
+    private eventLoop() {
+        if (this.eventQueue.length) {
+            let lastEvent = this.eventQueue[this.eventQueue.length - 1]
+            switch (lastEvent.type) {
+                case DragEventType.Enter:
+                    this.onDragOver(lastEvent.event);
+                    break;
+                case DragEventType.Leave:
+                    this.onDragLeave();
+                    break;
+                default:
+                    throw "Not implemented DragEventType!";
+            }
+        }
+
+        this.eventQueue = [];
+
+        if (this.isLooping) {
+            setTimeout(() => { this.eventLoop() }, 50);
+        }
     }
 
     @HostListener('dragover', ["$event"])
     protected dragover(event: DragEvent) {
-        this.onDragOver(event);
+        this.eventQueue.push({ type: DragEventType.Enter, event: event });
+        if (!this.isLooping) {
+            this.startEventLoop();
+        }
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    @HostListener('dragenter', ["$event"])
+    protected dragenter(event: DragEvent) {
+        //This is required for dragover to work in IE
     }
 
     @HostListener('dragleave')
     protected dragleave() {
-        requestAnimationFrame(() => {
-            this.onDragLeave();
-        });
+        this.eventQueue.push({ type: DragEventType.Leave, event: undefined });
+        event.preventDefault();
+        event.stopPropagation();
     }
 
     protected onDrop(draggable: Draggable) {
@@ -160,6 +209,7 @@ export class ContainerDirective implements OnChanges, OnInit, OnDestroy {
     }
 
     protected onDragLeave() {
+        this.isLooping = false;
         this.isTarget = false;
         this.dragService.leaveDrag();
         this.nativeElement.classList.remove("fren-hover");
