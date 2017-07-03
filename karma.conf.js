@@ -5,6 +5,7 @@ var webpackConfig = require('./webpack.config');
 var ENV = process.env.npm_lifecycle_event;
 var isTestWatch = ENV === 'test-watch';
 
+let _config = {
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
