@@ -53,10 +53,6 @@ let _config = {
     // enable / disable colors in the output (reporters and logs)
     colors: true,
 
-    // level of logging
-    // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: config.LOG_INFO,
-
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: false,
 
@@ -82,8 +78,11 @@ let _config = {
 };
 
 module.exports = function (config) {
-  if(process.env.TRAVIS) { 
-    _config.browsers = ['Chrome_travis_ci'];
-  }
-  config.set(_config);
+    // level of logging
+    // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
+    _config.logLevel =  config.LOG_INFO;
+    if(process.env.TRAVIS) { 
+        _config.browsers = ['Chrome_travis_ci'];
+    }
+    config.set(_config);
 };
