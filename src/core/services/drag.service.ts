@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs/Rx';
 
 import { Draggable } from '../directives/draggable.base';
-import { ContainerDirective } from '../directives/container.directive';
+import { ContainerBase } from '../directives/container.base';
 import { DragContainerPair } from '../model/draggable-container.pair';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class DragService {
 
     private current: Draggable;
     private validContainers: { [key: string]: boolean }
-    private currentTarget: ContainerDirective;
+    private currentTarget: ContainerBase;
 
     private onDragStartSubj: Subject<Draggable>;
     private onDragEndSubj: Subject<Draggable>;
@@ -43,14 +43,14 @@ export class DragService {
     /**
     * Fires an onDrop event with the passed parameters
     */
-    drop(draggable: Draggable, container: ContainerDirective) {
+    drop(draggable: Draggable, container: ContainerBase) {
         this.onDropSubj.next({ draggable: draggable, container: container });
     }
 
     /**
     * Updates the current target container with the given container
     */
-    enterDrag(container: ContainerDirective) {
+    enterDrag(container: ContainerBase) {
         this.currentTarget = container;
     }
 
