@@ -1,9 +1,11 @@
-var path = require('path');
+"use strict";
 
-var webpackConfig = require('./webpack.config');
+let path = require('path');
 
-var ENV = process.env.npm_lifecycle_event;
-var isTestWatch = ENV === 'test-watch';
+let webpackConfig = require('./webpack.config');
+
+let ENV = process.env.npm_lifecycle_event;
+let isTestWatch = ENV === 'test-watch';
 
 let _config = {
 
