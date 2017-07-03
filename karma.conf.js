@@ -5,8 +5,6 @@ var webpackConfig = require('./webpack.config');
 var ENV = process.env.npm_lifecycle_event;
 var isTestWatch = ENV === 'test-watch';
 
-module.exports = function (config) {
-  var _config = {
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
@@ -78,11 +76,11 @@ module.exports = function (config) {
         flags: ['--no-sandbox']
       }
     }
-  };
+};
 
+module.exports = function (config) {
   if(process.env.TRAVIS) { 
     _config.browsers = ['Chrome_travis_ci'];
   }
-  
   config.set(_config);
 };
