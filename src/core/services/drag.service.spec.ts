@@ -45,28 +45,27 @@ describe("DragService tests", () => {
 
 			it("positive test", () => {
 				let containers = { "c1": true } as any;
-				dragService.startDrag(null, containers);
+				dragService.startDrag({} as any, containers);
 
 				let result = dragService.isContainerValid([{key: "c1", value: true}]);
 				expect(result).toBeTruthy();
 			});
 
-			it("   negative test", () = >   {
-				lecontainers = { "c1":    } as any;
-				dragService.startDrag(null, containers);
+			it("negative test", () => {
+				let containers = { "c1": true } as any;
+				dragService.startDrag({} as any, containers);
 
 				let result = dragService.isContainerValid([{key: "c1", value: false}]);
 				expect(result).toBeFalsy();
 			});
 
-			it("c   alled with different  c o ntainer test", () => {
+			it("called with different container test", () => {
 				let containers = { "c1": true } as any;
-				dragService.startDrag(null, containers);
+				dragService.startDrag({} as any, containers);
 
 				let result = dragService.isContainerValid([{key: "c2", value: true}]);
 				expect(result).toBeFalsy();
 			});
 		});
-	}) ;
+	});
 });
-   

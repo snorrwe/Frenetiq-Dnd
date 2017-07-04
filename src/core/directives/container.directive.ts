@@ -34,7 +34,7 @@ export class ContainerDirective extends ContainerBase implements OnChanges, OnIn
 
         let onDragStartSub = this.subscribeToDragStart();
         let onDragEndSub = this.subscribeToDragEnd();
-        this.subscriptions = [onDragStartSub, onDragEndSub];
+        this.subscriptions = [onDragStartSub, onDragEndSub]; 
     }
 
     private subscribeToDragStart() {
