@@ -119,6 +119,12 @@ This project uses [https://travis-ci.org](https://travis-ci.org) to enforce succ
 	* single run: `npm run test`
 	* watch: `npm run test-watch`
 
+## Deployment
+
+Deployment is done via Travis CI. Mark the package for deployment by running `npm version <update\_type>`\* in the _dist_ directory
+> \* where update\_type is one of the semantic versioning release types, patch, minor, or major.
+> For more info go to [npm](https://docs.npmjs.com/getting-started/publishing-npm-packages)
+
 # Credits
 
 * Project setup based on [angular2-webpack](https://github.com/preboot/angular2-webpack)
