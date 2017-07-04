@@ -14,8 +14,8 @@ describe("DragService tests", () => {
 	describe("basic drag tests", () => {
 
 		it("Fires onDragStart when a component calls startDrag", () => {
-			let result:any;
-			let draggable = {foo: "bar"};
+			let result: any;
+			let draggable = { foo: "bar" };
 			service.onDragStart().subscribe((arg) => { result = arg; });
 			service.startDrag(draggable as any);
 
@@ -23,10 +23,10 @@ describe("DragService tests", () => {
 			expect(result).toBe(draggable, "Should use the provided draggable as callback argument");
 		});
 
-		it("Fires onDragEnd when a component calls endDrag", ()=>{
+		it("Fires onDragEnd when a component calls endDrag", () => {
 			let result: any;
-			let draggable = {foo: "bar"};
-			service.onDragEnd().subscribe((arg)=> {result = arg;});
+			let draggable = { foo: "bar" };
+			service.onDragEnd().subscribe((arg) => { result = arg; });
 			service.endDrag(draggable as any);
 
 			expect(result).toBeTruthy("Should fire the onDragEnd event");
