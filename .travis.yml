@@ -31,15 +31,15 @@ before_deploy:
   - npm run build
   - cd dist
 deploy:
-  - provider: npm
-  - email: littlesnorrboy@gmail.com
-  - skip_cleanup: true
-  - api_key:
-  - secure: "pkRcsThx/pUaMuJ+ISlLIJq5mjJHRLXpsj2FYqUNC8vrIDd5I6cEqV4ldJigvKe3tPsoBusr3piqiM9Ji1xPP3n5nCDo3f6PAERLkdkvhMS1fisXk7UgKnA2lNlmxFVid+ppdwkB5hWNdhrvLp0yICXweqX01KGLZxG9dN0YA5ThDTzTOBR81LAwOsbsAWnJ80DFa4+8BjrEY80oWhZDzOqCQ2sDZeIJJltP85Cjpe+INuqJuJn6xDP+bmC4ok67cxCYpr20pvde3T04AWD+s/nux4Nzyvlkm/z8xVmRquJSLR89cTun9XujS5WzwA1KvOWEESo3LwfwLeTAtJ/UCgkiFuUPcadVlPcvVq3lwjVkYLPZAbx1M/MXJ29MXIWyVo89Gn/AV73rQSYTlJsb9JXSOM8WYdlVZ2jRfChdiiUehfnEaI9X/DmXd6olRMWCZneK5eYEdJ4BHqHoqaVvf2R5xDH2cm42Y/cN9utRedVF6YQES1p2FF5U7eJZOhiDkMdMwOdqZFAg17EA8Nu01EfRUVs82mhMPe7b5wE7L0FAtEU58YFDctTLI2RsLp4GtUwVAK2QI8HZajPrPlJf/R/xqwXRmvTDlSNW65YMJj0vtYoq8cOVk923j44L5BIga8lnefcINZ1FbKBLB8a+jD0ImRTnaY39OjEQp1s1RRo="
-  - on:
-    - branch: master
-    - tags: true
-    - repo: snorrwe/ngx-frenetiq-dnd
+  provider: npm
+  email: littlesnorrboy@gmail.com
+  skip_cleanup: true
+  api_key:
+  secure: "pkRcsThx/pUaMuJ+ISlLIJq5mjJHRLXpsj2FYqUNC8vrIDd5I6cEqV4ldJigvKe3tPsoBusr3piqiM9Ji1xPP3n5nCDo3f6PAERLkdkvhMS1fisXk7UgKnA2lNlmxFVid+ppdwkB5hWNdhrvLp0yICXweqX01KGLZxG9dN0YA5ThDTzTOBR81LAwOsbsAWnJ80DFa4+8BjrEY80oWhZDzOqCQ2sDZeIJJltP85Cjpe+INuqJuJn6xDP+bmC4ok67cxCYpr20pvde3T04AWD+s/nux4Nzyvlkm/z8xVmRquJSLR89cTun9XujS5WzwA1KvOWEESo3LwfwLeTAtJ/UCgkiFuUPcadVlPcvVq3lwjVkYLPZAbx1M/MXJ29MXIWyVo89Gn/AV73rQSYTlJsb9JXSOM8WYdlVZ2jRfChdiiUehfnEaI9X/DmXd6olRMWCZneK5eYEdJ4BHqHoqaVvf2R5xDH2cm42Y/cN9utRedVF6YQES1p2FF5U7eJZOhiDkMdMwOdqZFAg17EA8Nu01EfRUVs82mhMPe7b5wE7L0FAtEU58YFDctTLI2RsLp4GtUwVAK2QI8HZajPrPlJf/R/xqwXRmvTDlSNW65YMJj0vtYoq8cOVk923j44L5BIga8lnefcINZ1FbKBLB8a+jD0ImRTnaY39OjEQp1s1RRo="
+  on:
+    branch: master
+    tags: true
+    repo: snorrwe/ngx-frenetiq-dnd
 
 notifications:
   email:
