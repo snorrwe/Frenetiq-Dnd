@@ -26,6 +26,7 @@ script: npm run travis-test
 before_deploy:
 - npm run build
 - cd dist
+- npm version patch
 deploy:
   provider: npm
   email: littlesnorrboy@gmail.com
