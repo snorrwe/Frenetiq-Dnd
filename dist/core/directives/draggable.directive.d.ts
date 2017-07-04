@@ -7,9 +7,9 @@ export declare class DraggableDirective extends Draggable implements OnInit, OnC
     readonly viewContainer: ViewContainerRef;
     protected _options: DraggableOptions;
     readonly model: any;
+    readonly parent: any;
     protected onDragStartEmitter: EventEmitter<Draggable>;
     protected onDragEndEmitter: EventEmitter<Draggable>;
-    readonly parent: any;
     readonly nativeElement: HTMLElement;
     constructor(elementRef: ElementRef, viewContainer: ViewContainerRef, dragService: DragService);
     ngOnInit(): void;

@@ -53,6 +53,10 @@ __decorate([
     __metadata("design:type", Object)
 ], DraggableDirective.prototype, "model", void 0);
 __decorate([
+    core_1.Input("parent"),
+    __metadata("design:type", Object)
+], DraggableDirective.prototype, "parent", void 0);
+__decorate([
     core_1.Output("onDragStart"),
     __metadata("design:type", core_1.EventEmitter)
 ], DraggableDirective.prototype, "onDragStartEmitter", void 0);
@@ -60,10 +64,6 @@ __decorate([
     core_1.Output("onDragEnd"),
     __metadata("design:type", core_1.EventEmitter)
 ], DraggableDirective.prototype, "onDragEndEmitter", void 0);
-__decorate([
-    core_1.Input("parent"),
-    __metadata("design:type", Object)
-], DraggableDirective.prototype, "parent", void 0);
 __decorate([
     core_1.HostListener("dragstart", ["$event"]),
     __metadata("design:type", Function),

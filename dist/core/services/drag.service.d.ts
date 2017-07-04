@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Rx';
 import { Draggable } from '../directives/draggable.base';
-import { ContainerDirective } from '../directives/container.directive';
+import { ContainerBase } from '../directives/container.base';
 import { DragContainerPair } from '../model/draggable-container.pair';
 export declare class DragService {
     private current;
@@ -22,11 +22,11 @@ export declare class DragService {
     /**
     * Fires an onDrop event with the passed parameters
     */
-    drop(draggable: Draggable, container: ContainerDirective): void;
+    drop(draggable: Draggable, container: ContainerBase): void;
     /**
     * Updates the current target container with the given container
     */
-    enterDrag(container: ContainerDirective): void;
+    enterDrag(container: ContainerBase): void;
     /**
     * Removes the current target container
     */
