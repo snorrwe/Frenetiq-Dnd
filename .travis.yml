@@ -2,44 +2,37 @@ sudo: required
 dist: trusty
 language: node_js
 node_js:
-  - '4.2'
-
-addons:
+- '4.2'
+addons: 
 apt:
   sources:
-    - google-chrome
+  - google-chrome
   packages:
-    - google-chrome-stable
-    - google-chrome-beta
-    - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost
-
-before_install:  
- - export CHROME_BIN=/usr/bin/google-chrome
- - export DISPLAY=:99.0 
- - sh -e /etc/init.d/xvfb start
- - sudo apt-get update
- - sudo apt-get install -y libappindicator1 fonts-liberation
- - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
- - sudo dpkg -i google-chrome*.deb
+  - google-chrome-stable
+  - google-chrome-beta
+  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost
+before_install:
+- export CHROME_BIN=/usr/bin/google-chrome
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
+- sudo apt-get update
+- sudo apt-get install -y libappindicator1 fonts-liberation
+- wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+- sudo dpkg -i google-chrome*.deb
 before_script:
 - npm install
 - export DISPLAY=:99.0
-
 script: npm run travis-test
-
 before_deploy:
-  - npm run build
-  - cd dist
+- npm run build
+- cd dist
 deploy:
   provider: npm
   email: littlesnorrboy@gmail.com
-  skip_cleanup: true
   api_key:
-    secure: "pkRcsThx/pUaMuJ+ISlLIJq5mjJHRLXpsj2FYqUNC8vrIDd5I6cEqV4ldJigvKe3tPsoBusr3piqiM9Ji1xPP3n5nCDo3f6PAERLkdkvhMS1fisXk7UgKnA2lNlmxFVid+ppdwkB5hWNdhrvLp0yICXweqX01KGLZxG9dN0YA5ThDTzTOBR81LAwOsbsAWnJ80DFa4+8BjrEY80oWhZDzOqCQ2sDZeIJJltP85Cjpe+INuqJuJn6xDP+bmC4ok67cxCYpr20pvde3T04AWD+s/nux4Nzyvlkm/z8xVmRquJSLR89cTun9XujS5WzwA1KvOWEESo3LwfwLeTAtJ/UCgkiFuUPcadVlPcvVq3lwjVkYLPZAbx1M/MXJ29MXIWyVo89Gn/AV73rQSYTlJsb9JXSOM8WYdlVZ2jRfChdiiUehfnEaI9X/DmXd6olRMWCZneK5eYEdJ4BHqHoqaVvf2R5xDH2cm42Y/cN9utRedVF6YQES1p2FF5U7eJZOhiDkMdMwOdqZFAg17EA8Nu01EfRUVs82mhMPe7b5wE7L0FAtEU58YFDctTLI2RsLp4GtUwVAK2QI8HZajPrPlJf/R/xqwXRmvTDlSNW65YMJj0vtYoq8cOVk923j44L5BIga8lnefcINZ1FbKBLB8a+jD0ImRTnaY39OjEQp1s1RRo="
+    secure: sH7AVi5NcrwBk8RJR6lxEMsvjxQ5AOIHBUMIZbN3vnrRFHSvr+33DNx8p2HmgxuLInFx5laS7/2lyBUESBF5xdoE9PepMlVRewTZyckGwIoihV9vP6OKoDEZvzkaZ/ftoqU0NVPCUJUXYNlWLhFGl39rBJulrCWKoY8pXD8yDGBO3y63h8LZxo9uJHpdZ6K6xd+joxK1NEVYiZ6LZ1VFPJYekxff7DhVNoo7aSXP6TbqIkfME5adJqlpW6AG/8Ob8mvCYtfUQKf6WiJdxRrI4zNcM+ECR8k1S1UtF3/2pmYWDecpqAXSmQqyOdcwI/Kj3bLNgSrocfpcXyBie026JGMqF/XhUi8jUz9dz8irQNG9A08j1qMlTr8FFkSsW8mIdiEz6CK1do4qr0/QCG9Ww//tR0cxFn2no46qPAMZhsVXCdHSp2GZirYK01j32DTkio2A3qcYvLQFDcsH5OFtIvMjeGq3VlwxOoPYhnwyi0UFca2HNvPk+rPQ5GygDAy0hoTV4IeQXrYwAYEHrAY8QIXgU8C4nHEnuJkzrM++McZ/prXhvaG7oNsmljyVHamLpNRb3e6MSvaXjfvpdR06C6Obqzhk06Eg3B5dG976o9peWt+vupcXhFx/SvSP34NJoG6VYiIiuMkHDlMPCOSHb4/dlJPMIYNwLd0chEQXTVU=
   on:
-    branch: master
-    repo: snorrwe/ngx-frenetiq-dnd
-
+    repo: snorrwe/Frenetiq-Dnd
 notifications:
   email:
     on_failure: change
