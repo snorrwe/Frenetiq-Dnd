@@ -7,9 +7,13 @@
     "experimentalDecorators": true,
     "sourceMap": true,
     "noEmitHelpers": true,
-    "outDir":"dist",
+    "outDir": "dist",
     "typeRoots": [
       "node_modules/@types"
+    ],
+    "lib": [
+      "es6",
+      "dom"
     ]
   },
   "files": [
