@@ -1,19 +1,17 @@
 {
   "name": "ngx-frenetiq-dnd",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "repository": {
     "url": "https://github.com/snorrwe/Frenetiq-Dnd"
   },
   "license": "MIT",
+  "keywords": ["angular", "angular2", "drag", "drop", "drag'n'drop", "frenetiq", "frenetiq-dnd", "dnd", "ng2", "ngx"],
   "dependencies": {
     "@angular/common": "^2.4.0",
     "@angular/compiler": "^2.4.0",
     "@angular/core": "^2.4.0",
-    "@angular/forms": "^2.4.0",
-    "@angular/http": "^2.4.0",
     "@angular/platform-browser": "^2.4.0",
     "@angular/platform-browser-dynamic": "^2.4.0",
-    "@angular/router": "3.4.10",
     "@types/core-js": "^0.9.0",
     "@types/jquery": "^2.0.41",
     "@types/node": "7.0.8",
