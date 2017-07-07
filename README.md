@@ -129,7 +129,8 @@ Deployment is done via Travis CI. Mark the package for deployment by running `np
 
 * Project setup based on [angular2-webpack](https://github.com/preboot/angular2-webpack)
 * Testing strategies found from [Angular —  Unit Testing recipes by Gerard Sans](https://medium.com/google-developer-experts/angular-2-unit-testing-with-jasmine-defe20421584)
-* [![codebeat badge](https://codebeat.co/badges/57556947-9843-487f-aa3d-abcbb7daf7b0)](https://codebeat.co/projects/github-com-snorrwe-frenetiq-dnd-master)
+* ![[codebeat badge](https://codebeat.co/badges/57556947-9843-487f-aa3d-abcbb7daf7b0)](https://codebeat.co/projects/github-com-snorrwe-frenetiq-dnd-master)
+* ![travis badge](https://travis-ci.org/snorrwe/Frenetiq-Dnd.svg?branch=master)
 
 # License
 
