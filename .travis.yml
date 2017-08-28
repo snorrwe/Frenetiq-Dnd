@@ -33,7 +33,7 @@ deploy:
   api_key:
     secure: sH7AVi5NcrwBk8RJR6lxEMsvjxQ5AOIHBUMIZbN3vnrRFHSvr+33DNx8p2HmgxuLInFx5laS7/2lyBUESBF5xdoE9PepMlVRewTZyckGwIoihV9vP6OKoDEZvzkaZ/ftoqU0NVPCUJUXYNlWLhFGl39rBJulrCWKoY8pXD8yDGBO3y63h8LZxo9uJHpdZ6K6xd+joxK1NEVYiZ6LZ1VFPJYekxff7DhVNoo7aSXP6TbqIkfME5adJqlpW6AG/8Ob8mvCYtfUQKf6WiJdxRrI4zNcM+ECR8k1S1UtF3/2pmYWDecpqAXSmQqyOdcwI/Kj3bLNgSrocfpcXyBie026JGMqF/XhUi8jUz9dz8irQNG9A08j1qMlTr8FFkSsW8mIdiEz6CK1do4qr0/QCG9Ww//tR0cxFn2no46qPAMZhsVXCdHSp2GZirYK01j32DTkio2A3qcYvLQFDcsH5OFtIvMjeGq3VlwxOoPYhnwyi0UFca2HNvPk+rPQ5GygDAy0hoTV4IeQXrYwAYEHrAY8QIXgU8C4nHEnuJkzrM++McZ/prXhvaG7oNsmljyVHamLpNRb3e6MSvaXjfvpdR06C6Obqzhk06Eg3B5dG976o9peWt+vupcXhFx/SvSP34NJoG6VYiIiuMkHDlMPCOSHb4/dlJPMIYNwLd0chEQXTVU=
   on:
-    repo: snorrwe/Frenetiq-Dnd
+    tags: true
 notifications:
   email:
     on_failure: change
